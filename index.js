@@ -1,7 +1,6 @@
 const { chromium } = require("@playwright/test");
 const fs = require("fs");
 const cron = require('node-cron');
-const ObjectsToCsv = require('objects-to-csv')
 
 
 async function scrape() {
