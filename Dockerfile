@@ -3,8 +3,7 @@ FROM node:16.13.2-alpine
 # Create app directory
 WORKDIR /usr/src/app
 
-RUN apk update && apk add libstdc++ chromium \
-    && rm -rf /var/cache/*
+RUN apk update && apk add libstdc++ && rm -rf /var/cache/*
 
 COPY package*.json ./
 
