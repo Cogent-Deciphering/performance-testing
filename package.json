@@ -10,5 +10,9 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.21.1"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.0",
+    "uuid": "^8.3.2"
   }
 }
