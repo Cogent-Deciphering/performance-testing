@@ -41,6 +41,6 @@ async function scrape() {
   });
 }
 
-cron.schedule('* 1 * * * *',  function() {
+cron.schedule('0 0 */1 * * *',  function() {
   scrape();
 });

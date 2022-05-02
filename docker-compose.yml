@@ -6,4 +6,5 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     restart: on-failure
-
+    volumes:
+      - ./:/usr/src/app/
