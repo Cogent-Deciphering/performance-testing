@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  performance_testing:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    restart: on-failure
+
