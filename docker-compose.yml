@@ -7,4 +7,4 @@ services:
       dockerfile: ./Dockerfile
     restart: on-failure
     volumes:
-      - ./:/usr/src/app/
+      - ./results/:/usr/src/app/results/

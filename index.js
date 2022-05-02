@@ -14,7 +14,11 @@ async function scrape() {
   const page = await browser.newPage({"userAgent": userAgent});
   let data = [];
   for(var i =0; i <= 1000; i++){
-    await page.goto('https://www.phs.org/Pages/default.aspx')
+    try{
+      await page.goto('https://www.phs.org/Pages/default.aspx')
+    } catch(err){
+      console.log(err)
+    }
 
     const performanceTimingJson = await page.evaluate(() => JSON.stringify(window.performance.timing))
     const performanceTiming = JSON.parse(performanceTimingJson)
@@ -35,8 +39,7 @@ async function scrape() {
   let values = data.map(o => Object.values(o).join(',')).join('\n');
 
   csv += header + '\n' + values;
-  console.log(csv);
-  fs.writeFile(`${dtStr}.csv`, csv, (error) => {
+  fs.writeFile(`results/${dtStr}.csv`, csv, (error) => {
     if (error) throw error;
   });
 }
