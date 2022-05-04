@@ -55,6 +55,6 @@ async function scrape() {
 let header = 'servername,seconds,timestamp' + '\n';
 createFile('results/performance_results.csv', header);
 
-cron.schedule('0 */1 * * * *',  function() {
+cron.schedule('0 0 */1 * * *',  function() {
   scrape();
 });
