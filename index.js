@@ -31,7 +31,7 @@ async function scrape() {
   browser = await chromium.launch(launchOptions);
   const page = await browser.newPage({"userAgent": userAgent});
   let data = [];
-  for(var i =0; i <= 10; i++){
+  for(var i =0; i <= 1000; i++){
     await timeout(1000);
     try{
       await page.goto('https://www.phs.org/Pages/default.aspx')
