@@ -2,6 +2,24 @@ const { chromium } = require("@playwright/test");
 const fs = require("fs");
 const cron = require('node-cron');
 
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function createFile(filepath, data) {
+  fs.open(filepath,'r',function(notExists, file) {
+    if (notExists) {
+
+      fs.writeFile(filepath, data, (err) => {
+        if (err) console.error(err)
+        console.log('Data written')
+      });
+
+    } else {
+      console.log("File already exists!");
+    }
+  });
+}
 
 async function scrape() {
   const launchOptions = {
@@ -13,7 +31,8 @@ async function scrape() {
   browser = await chromium.launch(launchOptions);
   const page = await browser.newPage({"userAgent": userAgent});
   let data = [];
-  for(var i =0; i <= 1000; i++){
+  for(var i =0; i <= 10; i++){
+    await timeout(1000);
     try{
       await page.goto('https://www.phs.org/Pages/default.aspx')
     } catch(err){
@@ -25,25 +44,17 @@ async function scrape() {
 
     const startToInteractive = performanceTiming.domInteractive - performanceTiming.navigationStart
     const servername = await page.evaluate(() => document.querySelector('meta[name="servername"]').getAttribute('content'))
-    result = {"servername": servername, "seconds": startToInteractive / 1000 }
-    data.push(result)
+    let seconds = startToInteractive / 1000
+    let dt = new Date()
+    let timestamp = dt.toLocaleString('en-US', {timeZone: 'US/Arizona'}).split(",").join("_").split(" ").join("")
+    console.log(timestamp)
+    fs.appendFileSync('results/performance_results.csv', `${servername},${seconds},${timestamp}` + '\n')
   }
-
-  await page.close()
-  await browser.close()
-  let dt = new Date()
-  let dtStr = dt.toLocaleString().split("/").join("_").split(" ").join("_").split(",").join("")
-
-  let csv = '';
-  let header = Object.keys(data[0]).join(',');
-  let values = data.map(o => Object.values(o).join(',')).join('\n');
-
-  csv += header + '\n' + values;
-  fs.writeFile(`results/${dtStr}.csv`, csv, (error) => {
-    if (error) throw error;
-  });
 }
 
-cron.schedule('0 0 */1 * * *',  function() {
+let header = 'servername,seconds,timestamp' + '\n';
+createFile('results/performance_results.csv', header);
+
+cron.schedule('0 */1 * * * *',  function() {
   scrape();
 });
